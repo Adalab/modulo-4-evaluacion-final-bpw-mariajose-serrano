@@ -1,0 +1,32 @@
+{
+  "name": "modulo-4-evaluacion-final-bpw-mariajose-serrano",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+   "dev": "nodemon index.js",
+  "start": "node index.js"
+    
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Adalab/modulo-4-evaluacion-final-bpw-mariajose-serrano.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Adalab/modulo-4-evaluacion-final-bpw-mariajose-serrano/issues"
+  },
+  "homepage": "https://github.com/Adalab/modulo-4-evaluacion-final-bpw-mariajose-serrano#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "mysql2": "^3.16.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}

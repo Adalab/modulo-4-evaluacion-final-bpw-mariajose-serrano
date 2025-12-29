@@ -28,6 +28,11 @@ app.get("/db-test", async (req, res) => {
 
 app.use("/recetas", recetasRoutes);
 
+app.get("/db-name", async (req, res) => {
+  const [rows] = await db.query("SELECT DATABASE() AS db");
+  res.json(rows[0]);
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });

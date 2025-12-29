@@ -117,3 +117,20 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ ok: false, error: error.message });
   }
 });
+
+// DELETE /recetas/:id -> borrar receta (y sus relaciones por ON DELETE CASCADE)
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const [result] = await db.query("DELETE FROM recetas WHERE id = ?", [id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ ok: false, error: "Receta no encontrada" });
+    }
+
+    res.json({ ok: true, message: "Receta eliminada" });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});

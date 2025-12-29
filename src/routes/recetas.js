@@ -2,7 +2,6 @@ const express = require("express");
 const db = require("../db");
 
 const router = express.Router();
-module.exports = router;
 
 // GET /recetas -> lista todas las recetas
 router.get("/", async (req, res) => {
@@ -15,8 +14,6 @@ router.get("/", async (req, res) => {
     res.status(500).json({ ok: false, error: error.message });
   }
 });
-
-module.exports = router;
 
 // POST /recetas -> crea una receta (con ingredientes opcionales)
 router.post("/", async (req, res) => {
@@ -134,3 +131,33 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ ok: false, error: error.message });
   }
 });
+
+// PUT /recetas/:id -> actualizar receta
+
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { title, instructions, time_minutes } = req.body;
+
+  if (!title || title.trim() === "") {
+    return res.status(400).json({ ok: false, error: "title es obligatorio" });
+  }
+
+  try {
+    const [result] = await db.query(
+      `UPDATE recetas
+       SET title = ?, instructions = ?, time_minutes = ?
+       WHERE id = ?`,
+      [title.trim(), instructions || null, time_minutes || null, id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ ok: false, error: "Receta no encontrada" });
+    }
+
+    res.json({ ok: true, message: "Receta actualizada" });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
+  }
+});
+
+module.exports = router;

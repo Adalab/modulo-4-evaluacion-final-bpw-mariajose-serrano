@@ -2,6 +2,7 @@ const express = require("express");
 const db = require("../db");
 
 const router = express.Router();
+module.exports = router;
 
 // GET /recetas -> lista todas las recetas
 router.get("/", async (req, res) => {
@@ -78,5 +79,41 @@ router.post("/", async (req, res) => {
     res.status(500).json({ ok: false, error: error.message });
   } finally {
     if (conn) conn.release();
+  }
+});
+
+// GET /recetas/:id -> detalle de una receta con ingredientes
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Buscar receta
+    const [recetas] = await db.query(
+      "SELECT id, title, instructions, time_minutes, created_at FROM recetas WHERE id = ?",
+      [id]
+    );
+
+    if (recetas.length === 0) {
+      return res.status(404).json({ ok: false, error: "Receta no encontrada" });
+    }
+
+    // Buscar ingredientes
+    const [ingredientes] = await db.query(
+      `SELECT i.name, ri.quantity
+       FROM receta_ingrediente ri
+       JOIN ingredientes i ON i.id = ri.ingrediente_id
+       WHERE ri.receta_id = ?`,
+      [id]
+    );
+
+    res.json({
+      ok: true,
+      data: {
+        ...recetas[0],
+        ingredients: ingredientes,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ ok: false, error: error.message });
   }
 });

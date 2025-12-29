@@ -1,11 +1,8 @@
-console.log("CARGANDO ESTE INDEX.JS:", __filename);
-
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config();
+const recetasRoutes = require("./src/routes/recetas");
 
-console.log("DB_USER:", process.env.DB_USER);
-console.log("DB_PASSWORD definido?:", Boolean(process.env.DB_PASSWORD));
+require("dotenv").config();
 
 const db = require("./src/db");
 
@@ -28,6 +25,8 @@ app.get("/db-test", async (req, res) => {
     res.status(500).json({ ok: false, error: error.message });
   }
 });
+
+app.use("/recetas", recetasRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
